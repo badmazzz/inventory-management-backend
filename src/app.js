@@ -21,11 +21,13 @@ import userRouter from "./routes/user.routes.js";
 import productRouter from "./routes/product.routes.js";
 import purchaseRouter from "./routes/purchase.routes.js";
 import storeRouter from "./routes/store.routes.js";
+import sellRouter from "./routes/sell.routes.js";
 
 //Route Declaration
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/purchase", purchaseRouter);
 app.use("/api/v1/store", storeRouter);
+app.use("/api/v1/sell", sellRouter);
 
 export default app;

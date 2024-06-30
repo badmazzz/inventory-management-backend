@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 
-const saleSchema = new mongoose.Schema(
+const sellSchema = new mongoose.Schema(
   {
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    productID: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
       required: true,
     },
-    storeID: {
+    storeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Store",
       required: true,
@@ -21,7 +21,7 @@ const saleSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    totalSaleAmount: {
+    totalSellAmount: {
       type: Number,
       required: true,
     },
@@ -29,4 +29,4 @@ const saleSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Sale = mongoose.model("Sale", saleSchema);
+export const Sell = mongoose.model("Sell", sellSchema);

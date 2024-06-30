@@ -1,26 +1,26 @@
 import { Product } from "../models/product.models.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiError } from "../utils/ApiError.js";
 
-const updateStock = asyncHandler(async (productId, purchaseStockData) => {
+const updateStock = async (productId, purchaseStockData) => {
   const { quantity, type } = purchaseStockData;
 
   const product = await Product.findById(productId);
   if (!product) {
-    throw new Error("Product not found");
+    throw new ApiError(404, "Product not found");
   }
 
-  if (type === "purchase") {
-    product.stock += quantity;
-  } else if (type === "order") {
+  if (type === "sell") {
     if (product.stock < quantity) {
-      throw new Error("Insufficient stock");
+      throw new ApiError(400, "Insufficient Stock.");
     }
     product.stock -= quantity;
+  } else if (type === "purchase") {
+    product.stock += quantity;
   } else {
-    throw new Error("Invalid operation type");
+    throw new ApiError(400, "Invalid operation type");
   }
 
   await product.save();
-});
+};
 
 export default updateStock;

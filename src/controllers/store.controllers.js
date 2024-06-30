@@ -8,7 +8,6 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 // Add Store
 const addStore = asyncHandler(async (req, res) => {
   const { name, category, address, city } = req.body;
-  console.log(req.body);
   const userId = req.user?._id;
   if (!name || !category || !address || !city) {
     throw new ApiError(400, "All fields are required.");
