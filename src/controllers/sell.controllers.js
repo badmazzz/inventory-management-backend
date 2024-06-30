@@ -26,6 +26,7 @@ const addSells = asyncHandler(async (req, res) => {
   const obj = {
     quantity: stockSold,
     type: "sell",
+    email: req.user?.email,
   };
 
   await updateStock(productId, obj);
@@ -137,6 +138,5 @@ const getMonthlySells = asyncHandler(async (req, res) => {
     res.status(500).json(new ApiResponse(500, null, "Internal server error."));
   }
 });
-
 
 export { addSells, getMonthlySells, getSellsData, getTotalSellsAmount };
