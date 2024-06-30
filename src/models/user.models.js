@@ -34,23 +34,6 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-
-    address: [
-      {
-        street: {
-          type: String,
-          required: true,
-        },
-        city: {
-          type: String,
-          required: true,
-        },
-        zipcode: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
   },
   { timestamps: true }
 );

@@ -2,26 +2,26 @@ import mongoose from "mongoose";
 
 const saleSchema = new mongoose.Schema(
   {
-    userID: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
       required: true,
     },
-    ProductID: {
+    productID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "product",
+      ref: "Product",
       required: true,
     },
-    StoreID: {
+    storeID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "store",
+      ref: "Store",
       required: true,
     },
-    StockSold: {
+    stockSold: {
       type: Number,
       required: true,
     },
-    TotalSaleAmount: {
+    totalSaleAmount: {
       type: Number,
       required: true,
     },

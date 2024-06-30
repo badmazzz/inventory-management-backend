@@ -1,27 +1,27 @@
 import mongoose from "mongoose";
 
-const orderSchema = new mongoose.Schema(
+const purchaseSchema = new mongoose.Schema(
   {
-    userID: {
+    owner: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "users",
+      ref: "User",
       required: true,
     },
-    ProductID: {
+    productId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "product",
+      ref: "Product",
       required: true,
     },
-    QuantityPurchased: {
+    quantity: {
       type: Number,
       required: true,
     },
-    TotalPurchaseAmount: {
+    totalAmount: {
       type: Number,
       required: true,
     },
-  }, 
+  },
   { timestamps: true }
 );
 
-export const Order = mongoose.model("Order", orderSchema);
+export const Purchase = mongoose.model("Purchase", purchaseSchema);
