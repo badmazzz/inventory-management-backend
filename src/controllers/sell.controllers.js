@@ -63,7 +63,43 @@ const addSells = asyncHandler(async (req, res) => {
 
 // Get All Sells Data
 const getSellsData = asyncHandler(async (req, res) => {
-  const sell = await Sell.find();
+  const sell = await Sell.aggregate([
+    {
+      $match: { owner: req.user._id },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "productId",
+        foreignField: "_id",
+        as: "product",
+        pipeline: [
+          {
+            $project: {
+              name: 1,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: "$product" },
+    {
+      $lookup: {
+        from: "stores",
+        localField: "storeId",
+        foreignField: "_id",
+        as: "store",
+        pipeline: [
+          {
+            $project: {
+              name: 1,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: "$store" },
+  ]);
   res
     .status(200)
     .json(new ApiResponse(200, sell, "Sell fetched successfully."));

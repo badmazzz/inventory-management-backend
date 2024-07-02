@@ -5,6 +5,7 @@ import { sendLowStockEmail } from "./lowStock.js";
 const updateStock = async (productId, purchaseStockData) => {
   const { quantity, type, email } = purchaseStockData;
 
+  console.log(productId);
   const product = await Product.findById(productId);
   if (!product) {
     throw new ApiError(404, "Product not found");

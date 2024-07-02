@@ -9,7 +9,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 const sendLowStockEmail = async (toEmail, productName,quantity) => {
   try {
     const info = await transporter.sendMail({

@@ -60,7 +60,27 @@ const getAllPurchase = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid User Id.");
   }
 
-  const purchase = await Purchase.find({ owner: userId });
+  const purchase = await Purchase.aggregate([
+    {
+      $match: { owner: userId },
+    },
+    {
+      $lookup: {
+        from: "products",
+        localField: "productId",
+        foreignField: "_id",
+        as: "product",
+        pipeline: [
+          {
+            $project: {
+              name: 1,
+            },
+          },
+        ],
+      },
+    },
+    { $unwind: "$product" },
+  ]);
   if (!purchase) {
     throw new ApiError(400, "No purchase found.");
   }
@@ -86,7 +106,7 @@ const deletePurchase = asyncHandler(async (req, res) => {
   if (!product) {
     throw new ApiError(404, "Product not found for this purchase.");
   }
-  
+
   product.stock -= purchase.quantity;
   await product.save();
 
@@ -105,6 +125,13 @@ const updatePurchase = asyncHandler(async (req, res) => {
   if (quantity) obj.quantity = quantity;
   if (productId) obj.productId = productId;
 
+  const purchaseStockData = {
+    quantity,
+    type: "purchase",
+  };
+
+  await updateStock(productId, purchaseStockData);
+
   const purchase = await Purchase.findByIdAndUpdate(
     purchaseId,
     {
@@ -122,10 +149,43 @@ const updatePurchase = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, purchase, "Purchase updated successfully."));
 });
 
+const getTotalPurchaseAmount = asyncHandler(async (req, res) => {
+  const userId = req.user?._id;
+
+  if (!isValidObjectId(userId)) {
+    throw new ApiError(400, "Invalid User Id.");
+  }
+
+  const totalAmount = await Purchase.aggregate([
+    { $match: { owner: userId } },
+    {
+      $group: {
+        _id: null,
+        totalAmount: { $sum: "$totalAmount" },
+      },
+    },
+  ]);
+
+  if (!totalAmount.length) {
+    throw new ApiError(404, "No purchases found.");
+  }
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        totalAmount[0].totalAmount,
+        "Total purchase amount fetched successfully."
+      )
+    );
+});
+
 export {
   addPurchase,
   getPurchaseById,
   getAllPurchase,
   deletePurchase,
   updatePurchase,
+  getTotalPurchaseAmount,
 };
